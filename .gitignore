@@ -1,0 +1,49 @@
+# Dependencias
+/node_modules
+/package-lock.json
+/yarn.lock
+
+# Archivos de compilación
+/dist
+/build
+
+# Archivos de configuración
+.env
+
+# Archivos de registro
+/logs
+
+# Otros archivos generados
+.DS_Store
+Thumbs.db
+
+# IDE / Editor específico
+.vscode
+.idea
+*.iml
+
+# Archivos de respaldo
+*.bak
+*.backup
+*.swp
+*~
+
+# Carpeta de pruebas
+/__tests__
+
+# Archivos de credenciales
+/credentials
+
+# Entornos específicos
+/.env.local
+/.env.development
+/.env.production
+
+# Cache
+/.cache
+
+# Logs
+/*.log
+
+# tests
+/coverage
