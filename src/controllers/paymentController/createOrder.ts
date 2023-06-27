@@ -66,7 +66,7 @@ const createOrder = async ({name, donation, email} : {name: string, donation: st
     },
   });
 
-  console.log(params);
+  console.log('paramssssssssssssss');
 
   return data;
 };
