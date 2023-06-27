@@ -56,11 +56,11 @@ const createOrder = async ({name, donation, email} : {name: string, donation: st
     }
   );
 
-  console.log(params);
+  console.log(access_token);
 
   // Creando pedido con el token generado
   // Devuelve el pedido
-  const { data } = await axios.post(` https://api-m.sandbox.paypal.com/v2/checkout/orders`, order, {
+  const { data } = await axios.post(`https://api-m.sandbox.paypal.com/v2/checkout/orders`, order, {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
