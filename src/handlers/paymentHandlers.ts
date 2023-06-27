@@ -29,14 +29,14 @@ export const captureOrderHandler: RequestHandler = async (req, res) => {
       ...amount
     }
     const newDonation = await Donation.create(paymentInfo)
-    res.redirect("http://localhost:5173/donation")
+    res.redirect("https://henrymoon.vercel.app/donation")
   } catch (err: any) {
     return res.status(500).json({ error: err.message });
   }
 };
 
 export const cancelOrderHandler: RequestHandler = async (req, res) => {
-  return res.redirect("http://localhost:5173/donation");
+  return res.redirect("https://henrymoon.vercel.app/donation");
 };
 
 export const getAllDonationsHandler: RequestHandler = async (req,res) => {

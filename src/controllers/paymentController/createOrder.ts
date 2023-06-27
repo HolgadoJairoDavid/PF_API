@@ -17,8 +17,8 @@ const createOrder = async ({name, _id, donation, email} : {name: string, _id: st
       brand_name: "ArepasCamilo",
       landing_page: "LOGIN",
       user_action: "PAY_NOW",
-      return_url: `http://localhost:3001/payment/capture-order?name=${name}&email=${email}`,
-      cancel_url: `http://localhost:3001/payment/cancel-order`,
+      return_url: `https://pfapi-production.up.railway.app/payment/capture-order?name=${name}&email=${email}`,
+      cancel_url: `https://pfapi-production.up.railway.app/payment/cancel-order`,
     },
   };
 
