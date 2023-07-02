@@ -4,6 +4,8 @@ import thirdSignIn from '../controllers/authControllers/thirdSignIn'
 import ownSignIn from '../controllers/authControllers/ownSignIn'
 import checkThird from '../controllers/authControllers/checkThird'
 import thirdSignUp from '../controllers/authControllers/thirdSignUp'
+import nodemailer from "nodemailer";
+import Mailgen from "mailgen";
 
 export const signUpHandler:RequestHandler = async (req, res) => {
   // a parte de crear debe loguear al usuario
@@ -32,9 +34,6 @@ export async function  ownSignInHandler (req: Request, res: Response) {
   
     const result:any = await ownSignIn({email, password}) // ! /////
     
-    console.log(result.user.newMessages)
-
-
     res.status(200).json(result)
   
 } catch (error:any) {
@@ -55,8 +54,6 @@ export async function thirdSignInHandler(req: Request, res: Response){
   }
 }
 
-
-
 // ! Por ahora no hace nada 
 
 export const logOutHandler:RequestHandler = async (req, res) => {
@@ -68,7 +65,6 @@ export const logOutHandler:RequestHandler = async (req, res) => {
     res.status(500).json({error: err.message})
   }
 }
-
 
 export const checkThirdHandler:RequestHandler = async (req, res) => {
   const userData = req.body
@@ -82,6 +78,7 @@ export const checkThirdHandler:RequestHandler = async (req, res) => {
 
 export const thirdSignUpHandler:RequestHandler = async (req, res) => {
   const userData = req.body
+
   try {
     const result = await thirdSignUp(userData)
     res.status(200).json(result)
@@ -89,3 +86,59 @@ export const thirdSignUpHandler:RequestHandler = async (req, res) => {
     res.status(500).json({error: err.message})
   }
 }
+//Handler para enviar codigo al mail
+export const codeHandler:RequestHandler = async (req,res)=>{
+  const userData = req.body
+  try{
+    //Configuramos para que pueda recibir emails
+  let config = {
+    service: "gmail",
+    auth: {
+      user: "henrymoon.latam@gmail.com",
+      pass: "xdgpunccyritkucn",
+    },
+  };
+
+  let transporter = nodemailer.createTransport(config);
+
+  let MailGenerator = new Mailgen({
+    theme: "default",
+    product: {
+      name: "Welcome back to HenryMoon!🚀🌕",
+      link: "https://mailgen.js/",
+    },
+  });
+
+  let response = {
+    body: {
+      name: "Henry mooner 🌚",
+      intro:
+        `Please enter the following code in the page so you can set a new password: `,
+        table: {
+          data: [
+            {
+              Code:
+              `${userData.code}`,
+            },
+          ],
+        },
+      outro: "If the code does not work, please try again with another request.",
+    },
+  };
+
+  let mail = MailGenerator.generate(response);
+
+  let message = {
+    from: "henrymoon.latam@gmail.com",
+    to: userData.email,
+    subject: "Reset password",
+    html: mail,
+  };
+
+  await transporter.sendMail(message);
+  res.status(200).json({success: true})
+  } catch(err:any){
+    res.status(500).json({error: err.message})
+  }
+
+} 

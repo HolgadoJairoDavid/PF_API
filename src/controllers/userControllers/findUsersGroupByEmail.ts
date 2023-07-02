@@ -19,6 +19,7 @@ const findUsersGroupByEmail = async (email: string) => {
       _id: user._id.toString(),
       name: user.name,
       email: user.email,
+      cohort: user.cohort,
       group: user.group,
       // isConnected: false,
     }

@@ -1,7 +1,6 @@
 import { prop, getModelForClass } from '@typegoose/typegoose'
 
-class Game {
-  
+export class Game {
 
   @prop()
   name: string
@@ -10,10 +9,16 @@ class Game {
   description: string
 
   @prop()
-  genres: string
+  stars: number
 
   @prop()
-  stars: string
+  image: string
+
+  @prop()
+  url: string
+
+  @prop({required: true, default: false})
+  isOwn: boolean
 
   // obligatorio para todas las colecciones
   @prop({required: true, default: false})

@@ -5,11 +5,14 @@ import {
   signUpHandler,
   logOutHandler,
   checkThirdHandler,
-  thirdSignUpHandler
+  thirdSignUpHandler,
+  codeHandler
 } from "../handlers/authHandlers";
 
 const authRouter = Router();
 
+//send email
+authRouter.post("/passwordcode", codeHandler)
 // create user
 authRouter.post("/signup", signUpHandler);
 

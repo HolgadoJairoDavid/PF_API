@@ -1,8 +1,10 @@
 import User from '../../../models/User'
+import Group from '../../../models/Group'
 
 
 export async function  userHaveAccess(email:string) {
-  const user = await User.findOne({email})
+
+  const user:any = await User.findOne({email})
 
   // El usuario no existe
   if(!user) return {access: false, user:null}
@@ -15,6 +17,19 @@ export async function  userHaveAccess(email:string) {
   user.status = 'online'
   await user.save()
 
+  // Encontramos el grupo al que pertenece
+
+  const group = await Group.find({
+    $and: [
+      {groupNumber: user.group},
+      {cohort: user.cohort}
+    ]
+  })
+
   // el usuario existe y no esta eliminado/baneado
-  return {access: true, user}
+  return {
+    access: true, 
+    user,
+    group
+  }
 }

@@ -78,10 +78,13 @@ export const reviveGroupByIDHandler:RequestHandler = async (req, res) => {
 
 
 export const getAllGroupsHandler:RequestHandler = async (req, res) => {
+
+  const { cohort }: any = req.query
+
   try {
     // hacer las comprobaciones aqui
     
-    const groups = await getAllGroups()
+    const groups = await getAllGroups(cohort)
     res.status(200).json(groups)
 
   } catch (err: any) {

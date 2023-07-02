@@ -1,21 +1,31 @@
-import { prop, getModelForClass } from '@typegoose/typegoose'
+import { prop, Ref, getModelForClass } from '@typegoose/typegoose'
+import {User} from './User';
+import {Game} from './Game';
+
 
 class Ranking {
 
-  @prop()
-  user: string
+  @prop({required: true, ref: 'User'})
+  userID: Ref<User>
 
-  @prop()
-  cohorte: string
+  @prop({required: true, ref: 'User'})
+  gameID: Ref<Game>
+
+  @prop({required: true})
+  cohort: string
+
+  @prop({required: true})
+  group: string
   
-  @prop()
-  points: string
+  @prop({required: true})
+  points: number
 
   @prop()
-  date: string
+  date: Date
 
-  @prop()
-  type: string
+  // Es propio o de terceros
+  @prop({required: true, default: false})
+  isOwn: boolean
 
   // obligatorio para todas las colecciones
   @prop({required: true, default: false})

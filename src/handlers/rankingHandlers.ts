@@ -6,6 +6,14 @@ import updateRanking from '../controllers/rankingControllers/updateRanking'
 import deleteRanking from '../controllers/rankingControllers/deleteRanking' 
 import reviveRankingByID from '../controllers/rankingControllers/reviveRankingByID' 
 import findRanking from '../controllers/rankingControllers/findRanking' 
+import getGeneralRanking from '../controllers/rankingControllers/getGeneralRanking'
+import getCohortRanking from '../controllers/rankingControllers/getCohortRanking'
+import getGroupRanking from '../controllers/rankingControllers/getGroupRanking'
+import getRankingInGamesByUser from '../controllers/rankingControllers/getRankingInGamesByUser'
+import createManyRankings from '../controllers/rankingControllers/createManyRankings'
+import getTotalRankingOfUser from '../controllers/rankingControllers/getTotalRankingOfUser'
+import createCountRanking from '../controllers/rankingControllers/createCountRanking'
+import getRankingOfGame from '../controllers/rankingControllers/getRankingOfGame'
 
 
 export const createRankingHandler:RequestHandler = async (req, res) => {
@@ -102,4 +110,104 @@ export const findRankingHandler:RequestHandler = async (req, res) => {
   } catch (err: any) {
     res.status(500).json({error: err.message})
 }
+}
+
+
+export const getGeneralRankingHandler:RequestHandler = async (req, res) => {
+  try {
+    const ranking = await getGeneralRanking()
+    res.status(200).json(ranking)
+
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
+}
+
+
+export const getCohortRankingHandler:RequestHandler = async (req, res) => {
+  const {cohort}= req.params
+
+  try {
+    const ranking = await getCohortRanking(cohort)
+    res.status(200).json(ranking)
+
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
+}
+
+
+export const getGroupRankingHandler:RequestHandler = async (req, res) => {
+  const {cohort, group}= req.query
+
+  try {
+    const ranking = await getGroupRanking(cohort, group)
+    res.status(200).json(ranking)
+
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
+}
+
+
+export const getRankingInGamesByUserHandler:RequestHandler = async (req, res) => {
+  const {userID}= req.params
+
+  try {
+    const ranking = await getRankingInGamesByUser(userID)
+    res.status(200).json(ranking)
+
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
+}
+
+
+export const createManyRankingsHandler:RequestHandler = async (req, res) => {
+  const manyRankings = req.body
+
+  try {
+    const rankings = await createManyRankings(manyRankings)
+    res.status(200).json(rankings)
+
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
+}
+
+
+export const getTotalRankingOfUserHandler:RequestHandler = async (req, res) => {
+  const {userID} = req.params
+
+  try {
+    const totalRanking = await getTotalRankingOfUser(userID)
+    res.status(200).json(totalRanking)
+
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
+}
+
+export const createCountRankingHandler:RequestHandler = async (req, res) => { // ! /////////
+  const rankingData = req.body
+
+  try {
+    const totalRanking = await createCountRanking(rankingData)
+    res.status(200).json(totalRanking)
+
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
+}
+
+export const getRankingOfGameHandler:RequestHandler = async (req, res) => {
+  const {gameID}= req.params
+
+  try {
+    const rankings = await getRankingOfGame(gameID)
+    res.status(200).json(rankings)
+
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
 }

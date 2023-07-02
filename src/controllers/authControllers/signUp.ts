@@ -1,4 +1,5 @@
 import User from "../../models/User";
+import Group from "../../models/Group";
 import bcrypt from "bcrypt";
 import { createToken } from "../../helpers";
 import "dotenv/config";
@@ -6,14 +7,13 @@ import nodemailer from "nodemailer";
 import Mailgen from "mailgen";
 
 const signUp = async (userData: any) => {
-  // userData.birthdate = new Date(userData.birthdate)
-  // console.log()
+  
 
   if (userData) {
     //1234
     userData.password = await bcrypt.hash(userData.password, 10); //$2b$10$ZgjhmJXXRzXM6P.vvCiaUuBOyIbAt5dg.l93OEMCdgu21weCDPZU6
   }
-  const newUser = await User.create(userData);
+  const newUser:any = await User.create(userData);
 
   // ! ////////
 
@@ -23,6 +23,17 @@ const signUp = async (userData: any) => {
   await newUser.save()
 
   // ! ////////
+
+  // info cohorte y grupo
+
+  const group = await Group.find({
+    $and: [
+      {groupNumber: newUser.group},
+      {cohort: newUser.cohort}
+    ]
+  })
+
+  // ! ///////
 
   //Configuramos para que pueda recibir emails
   let config = {
@@ -71,11 +82,17 @@ const signUp = async (userData: any) => {
 
   await transporter.sendMail(message);
 
+  // ! //////////
+
   return {
     access: true,
     token: createToken({ id: newUser._id, email: newUser.name }),
-    user: newUser,
+    user: {
+      ...newUser._doc,
+      groupDetail: group
+    },
   };
+
 };
 
 export default signUp;

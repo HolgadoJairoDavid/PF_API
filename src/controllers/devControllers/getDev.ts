@@ -1,5 +1,5 @@
 
-const getDev = async () => {
+const getDev = async (data:any) => {
   return {message: "GET all OK"}
 }
 

@@ -1,8 +1,25 @@
-import { prop, getModelForClass } from '@typegoose/typegoose'
+import { prop, pre, getModelForClass } from '@typegoose/typegoose'
+import { isCohortValid } from '../helpers/validations'
+
+@pre<User>('save', async function (next) {
+  try {
+    // Verificar alguna condición antes de permitir el guardado
+    if (!isCohortValid(this.cohort)) {
+      throw new Error('Cohort Name not allowed. Cannot save the document.');
+    }
+    
+    this.cohort = this.cohort.toLocaleLowerCase()
+
+    // Si no hay errores, llamar a `next` para continuar con el proceso de guardado
+    next();
+  } catch (error:any) {
+    // Si hay un error, llamar a `next` con el error para evitar el guardado
+    next(error);
+  }
+})
 
 
-
-class User {
+export class User {
 
   @prop({required: true, unique: true })
   email: string
@@ -58,7 +75,22 @@ class User {
   status: string
 
   // ! ////////
+
+  // TA props
+
+  @prop({default: false})
+  isTA: boolean
+
+  @prop({default: null})
+  TAcohort: string
+
+  @prop({default: null})
+  TAgroup: string
+
+  // ! ///////
+
 }
+
 
 const UserModel = getModelForClass(User)
 

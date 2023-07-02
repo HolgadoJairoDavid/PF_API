@@ -19,8 +19,9 @@ export const postDevHandler:RequestHandler = async (req, res) => {
 
 
 export const getDevHandler:RequestHandler = async (req, res) => {
+  
   try {
-    const result = await getDev()
+    const result = await getDev(req.query)
     res.status(200).json(result)
 
   } catch (err: any) {

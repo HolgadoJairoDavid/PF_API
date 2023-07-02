@@ -9,6 +9,7 @@ import userGameRouter from './userGame.routes'
 import payment from './payment.routes'
 import devRouter from './dev.routes'
 import chatRouter from './chat.route'
+import commentRouter from './comment.routes'
 
 const router = Router()
 
@@ -22,4 +23,6 @@ router.use('/payment', payment)
 router.use('/usergame', userGameRouter)
 router.use('/dev', devRouter)
 router.use('/chat', chatRouter)
+router.use('/comment', commentRouter)
+
 export default router

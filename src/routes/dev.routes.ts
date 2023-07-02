@@ -18,6 +18,7 @@ devRouter.post("/", postDevHandler);
 // protegemos la ruta, pasar token por el header en Authorization
 devRouter.get("/protect", passport.authenticate('jwt', {session: false}), getProtectDevHandler);
 
+// puedes pasar datos por query
 devRouter.get("/", getDevHandler);
 
 export default devRouter;

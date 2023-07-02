@@ -3,9 +3,9 @@
 import Ranking from '../../models/Ranking'
 
 const findRanking = async (rankingProps: object) => {
-  const ranking = await Ranking.find(rankingProps)
+  const rankings = await Ranking.find(rankingProps)
 
-  return ranking
+  return rankings
 }
 
 export default findRanking

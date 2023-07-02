@@ -7,6 +7,10 @@ import getAllUsers from '../controllers/userControllers/getAllUsers'
 import existsUserEmail from '../controllers/userControllers/existsUserEmail' 
 import reviveUserByID from '../controllers/userControllers/reviveUserByID' 
 import findUsersGroupByEmail from '../controllers/userControllers/findUsersGroupByEmail' 
+import searchUsers from '../controllers/userControllers/searchUsers' 
+import banUser from '../controllers/userControllers/banUser'
+import unBanUser from '../controllers/userControllers/unBanUser'
+import changePassword from '../controllers/userControllers/changePassword'
 
 export const updateUserHandler:RequestHandler = async (req, res) => {
   const userData = req.body
@@ -37,6 +41,22 @@ export const deleteUserHandler:RequestHandler = async (req, res) => {
   }
 }
 
+// Handler para bannear usuario
+
+export const banUserHandler:RequestHandler = async (req, res) => {
+  const {id} = req.params
+  try {
+    // hacer las comprobaciones aquí
+    if(!id) throw new Error('Id is null')
+
+    const bannedUser = await banUser(id)
+    res.status(200).json(bannedUser)
+
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
+}
+
 export const reviveUserByIDHandler:RequestHandler = async (req, res) => {
   const {id} = req.params
   try {
@@ -44,6 +64,21 @@ export const reviveUserByIDHandler:RequestHandler = async (req, res) => {
     if(!id) throw new Error('Id is null')
 
     const newUser = await reviveUserByID(id)
+    res.status(200).json(newUser)
+
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
+}
+
+// LO USAREMOS PARA DESVANEAR 
+export const unBanUserHandler:RequestHandler = async (req, res) => {
+  const {id} = req.params
+  try {
+    // hacer las comprobaciones aquí
+    if(!id) throw new Error('Id is null')
+
+    const newUser = await unBanUser(id)
     res.status(200).json(newUser)
 
   } catch (err: any) {
@@ -110,7 +145,7 @@ export const findUserHandler:RequestHandler = async (req, res) => {
 }
 
 
-
+// lo usa el jeugo de slimes
 export const findUsersGroupByEmailHandler:RequestHandler = async (req, res) => {
   const {email} = req.query
   try {
@@ -122,3 +157,29 @@ export const findUsersGroupByEmailHandler:RequestHandler = async (req, res) => {
     res.status(500).json({error: err.message})
   }
 }
+
+// Busca por coincidencias en email
+export const searchUsersHandler:RequestHandler = async (req, res) => {
+  const {email} = req.query
+  try {
+    if(!email) return res.status(400).json({message: "The email is undefined"})
+
+    const usersGroup = await searchUsers(email.toString())
+    res.status(200).json(usersGroup)
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
+}
+
+//cambiar contraseña
+export const changePasswordHandler:RequestHandler = async (req,res)=>{
+  const {email, password} = req.body //mail, pass
+  try {
+    const newPass = await changePassword(email,password) 
+    res.status(200).json(newPass)
+  
+  } catch (err: any) {
+    res.status(500).json({error: err.message})
+  }
+}
+

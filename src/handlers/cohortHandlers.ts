@@ -77,6 +77,7 @@ export const reviveCohortByIDHandler:RequestHandler = async (req, res) => {
 
 
 export const getAllCohortsHandler:RequestHandler = async (req, res) => {
+  
   try {
     // hacer las comprobaciones aqui
     

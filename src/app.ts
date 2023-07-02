@@ -36,13 +36,11 @@ app.use('/', router)
 // socket
 interface IUser {
   _id: string,
-  name: string,
-  group: string,
-  socketId: string,
-  isConnected: boolean
+  socketId: string
 }
 
-let group: object[] = []
+let users:IUser[] = []
+
 
 // ! ////////
 
@@ -68,56 +66,55 @@ const sortRoomMessagesByDate = (messages: any) => {
 
 io.on('connection', (socket) => {
   console.log("connected", socket.id)
-  
-  /* socket.on('userData', async (userData) =>  {//
-    const {user} = userData
 
-    if(!group.length){
-      const usersGroup = await findUsersByGroup(user.group)
-      group = usersGroup
+  socket.on("userData",async (userId)=>{
+    if(!userId) return;
+
+    const match = users.find(user => user._id === userId)
+    console.log('USUARIO envia su id: ', userId);
+    if(match){
+      match.socketId = socket.id
+      const user:any = await User.findById(match?._id)
+      console.log('USUARIO conectado: '+ user.name);
+      user.status = 'online'
+      await user.save()
+
+      const members = await User.find()
+
+      socket.broadcast.emit('new-user', members)
+    } else {
+      users.push({_id: userId , socketId: socket.id })
     }
-    
-    const newUser:any = group.find( (u:any) => u.email === user.email)
-
-    if(!newUser){
-      console.log(group, user)
-      console.log(typeof(user._id))
-    }
-    newUser.socketID = socket.id
-    newUser.isConnected = true
-    
-    socket.emit('currentData', group)
-    socket.broadcast.emit('currentData', group)
-  }) */
-
-  socket.on('message',(message) => {
-    socket.broadcast.emit('message', {
-      body: message.body,
-      from: message.from
-    })
+    // console.log( 'Id de usuario: ', userId);
   })
 
-  socket.on('logout', (userData) => {
-    const logoutUser:any  = group.find((user:any)=> user.email === userData.email)
-    if(logoutUser)
-      logoutUser.isConnected = false
+  socket.on('disconnect', async () => {
+   
+    const match = users.find(user => user.socketId === socket.id)
+    try {
+      const user:any = await User.findById(match?._id)
+      console.log('USUARIO desconectado: '+ user.name);
+      user.status = 'offline'
+      await user.save()
 
-    console.log('logout', userData.name);
-    socket.broadcast.emit('disconnected', logoutUser)
-  });
-  socket.on('disconnect', () => {
-    const disconnectedUser:any = group.find((user:any)=> user.isConnected && user.socketID === socket.id)
-    if(disconnectedUser)
-      disconnectedUser.isConnected = false
+      const members = await User.find()
 
-    console.log('disconnect', socket.id);
+      socket.broadcast.emit('new-user', members)
+      users = users.filter(user=>user.socketId !== socket.id)
+    } catch (error) {
+      console.log('Mire, un error' + error)
+    }
+
+
+
+   console.log('desconectado', socket.id);
   });
 
   // ! ////////
 
   socket.on('new-user', async () => {
     const members = await User.find()
-    members.forEach(m => console.log(m.status))
+    // members.forEach(m => console.log(m.status))
     io.emit('new-user', members)
   })
 
@@ -147,11 +144,13 @@ io.on('connection', (socket) => {
 
   app.post('/logout', async(req, res) => {
 
-    console.log(req.body)
+    console.log(req.body.name, req.body.email)
 
     try {
       
       const {_id, newMessages} = req.body
+      
+      console.log(_id)
 
       const user:any = await User.findById(_id)
 

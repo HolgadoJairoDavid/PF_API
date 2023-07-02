@@ -13,8 +13,8 @@ const checkThird = async (userData:any) => {
   if(!accessResult.user) return accessResult // comprobaccion extra para que no se queje typescript
   
   // El usuario existe y tiene acceso (no esta eliminado/baneado)
-  const {user} = accessResult
-  return {access: true, token: createToken({id: user._id, email: user.name}), user}
+  const {user, group} = accessResult
+  return {access: true, token: createToken({id: user._id, email: user.name}), user: {...user._doc, groupDetail: group}}
 }
 
 export default checkThird

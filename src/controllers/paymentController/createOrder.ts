@@ -1,8 +1,7 @@
 import axios from "axios";
 
-const createOrder = async ({name, donation, email} : {name: string, donation: string, email: string}) => {
+const createOrder = async ({name, _id, donation, email} : {name: string, _id: string, donation: string, email: string}) => {
   // Creamos el pedido
-  
   const order = {
     intent: "CAPTURE",
     purchase_units: [
@@ -41,8 +40,6 @@ const createOrder = async ({name, donation, email} : {name: string, donation: st
   };
 
   // Generando el token
-  console.log(params);
-  
   const {
     data: { access_token },
   } = await axios.post(
@@ -56,17 +53,13 @@ const createOrder = async ({name, donation, email} : {name: string, donation: st
     }
   );
 
-  console.log(access_token);
-
   // Creando pedido con el token generado
   // Devuelve el pedido
-  const { data } = await axios.post(`https://api-m.sandbox.paypal.com/v2/checkout/orders`, order, {
+  const { data } = await axios.post(` https://api-m.sandbox.paypal.com/v2/checkout/orders`, order, {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
   });
-
-  console.log('paramssssssssssssss');
 
   return data;
 };

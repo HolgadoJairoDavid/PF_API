@@ -3,11 +3,21 @@ import { createToken } from "../../helpers";
 import "dotenv/config";
 import nodemailer from "nodemailer";
 import Mailgen from "mailgen";
+import Group from "../../models/Group";
 
 const thirdSignUp = async (userData: any) => {
   // userData.birthdate = new Date(userData.birthdate)
-  // console.log()
-  const newUser = await User.create(userData);
+  
+  const newUser:any = await User.create(userData);
+
+  // Encontramos su grupo para devolverlo
+
+  const group = await Group.find({
+    $and: [
+      {groupNumber: newUser.group},
+      {cohort: newUser.cohort}
+    ]
+  })
 
   //Configuramos para que pueda recibir emails
   let config = {
@@ -21,6 +31,7 @@ const thirdSignUp = async (userData: any) => {
   // Indicamos online
 
   newUser.status = 'online'
+  newUser.cohort = userData.cohort
   await newUser.save()
 
   let transporter = nodemailer.createTransport(config);
@@ -64,7 +75,10 @@ const thirdSignUp = async (userData: any) => {
   return {
     access: true,
     token: createToken({ id: newUser._id, email: newUser.name }),
-    user: newUser,
+    user:{
+      ...newUser._doc,
+      groupDetail: group
+    }
   };
 };
 

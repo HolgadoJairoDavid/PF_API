@@ -1,10 +1,14 @@
-import Cohort from '../../models/Cohort'
+import User from "../../models/User";
 
 const getAllCohorts = async () => {
+  const users = await User.find();
+  const cohorts: any[] = new Array();
+  for (let i = 0; i < users.length; i++) {
+    if (!cohorts.includes(users[i].cohort)) {
+      cohorts.push(users[i].cohort);
+    }
+  }
+  return cohorts;
+};
 
-  const cohorts = await Cohort.find({isDeleted: false})
-
-  return cohorts
-}
-
-export default getAllCohorts
+export default getAllCohorts;
