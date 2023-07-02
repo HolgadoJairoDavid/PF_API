@@ -1,14 +1,10 @@
-import Comment from "../../models/Comment";
+import Comment from '../../models/Comment'
 
-const findComment = async (Game: any) => {
-  const comments = await Comment.find(Game);
-  const average = (
-    comments.reduce((total, comment) => {
-      return total + Number(comment.stars);
-    }, 0) / comments.length
-  ).toFixed(1);
+const findComment = async (Game:any) => {
 
-  return { average, comments };
-};
+  const comments = await Comment.find(Game)
 
-export default findComment;
+  return comments
+}
+
+export default findComment
