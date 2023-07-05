@@ -45,7 +45,6 @@ function userHaveAccess(email) {
 exports.userHaveAccess = userHaveAccess;
 // valida usuario y lanza un un error si no cumple
 function validateUser(userData) {
-    console.log(userData);
     if (!userData.name)
         throw new Error("The name is undefined");
     if (!userData.cohort)

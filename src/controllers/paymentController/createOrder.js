@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const createOrder = ({ name, _id, donation, email }) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(name);
     // Creamos el pedido
     const order = {
         intent: "CAPTURE",
@@ -31,8 +30,8 @@ const createOrder = ({ name, _id, donation, email }) => __awaiter(void 0, void 0
             brand_name: "ArepasCamilo",
             landing_page: "LOGIN",
             user_action: "PAY_NOW",
-            return_url: `http://localhost:3001/payment/capture-order?name=${name}&email=${email}`,
-            cancel_url: `http://localhost:3001/payment/cancel-order`,
+            return_url: `https://henrymoon.onrender.com/payment/capture-order?name=${name}&email=${email}`,
+            cancel_url: `https://henrymoon.onrender.com/payment/cancel-order`,
         },
     };
     // Generamos parámetros para enviar como campos de formulario

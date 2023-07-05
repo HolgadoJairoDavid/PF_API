@@ -60,16 +60,13 @@ const sortRoomMessagesByDate = (messages) => {
 };
 // ! ////////
 io.on('connection', (socket) => {
-    console.log("connected", socket.id);
     socket.on("userData", (userId) => __awaiter(void 0, void 0, void 0, function* () {
         if (!userId)
             return;
         const match = users.find(user => user._id === userId);
-        console.log('USUARIO envia su id: ', userId);
         if (match) {
             match.socketId = socket.id;
             const user = yield User_1.default.findById(match === null || match === void 0 ? void 0 : match._id);
-            console.log('USUARIO conectado: ' + user.name);
             user.status = 'online';
             yield user.save();
             const members = yield User_1.default.find();
@@ -83,7 +80,9 @@ io.on('connection', (socket) => {
         const match = users.find(user => user.socketId === socket.id);
         try {
             const user = yield User_1.default.findById(match === null || match === void 0 ? void 0 : match._id);
-            console.log('USUARIO desconectado: ' + user.name);
+            if (!user) {
+                return;
+            }
             user.status = 'offline';
             yield user.save();
             const members = yield User_1.default.find();
@@ -91,14 +90,12 @@ io.on('connection', (socket) => {
             users = users.filter(user => user.socketId !== socket.id);
         }
         catch (error) {
-            console.log('Mire, un error' + error);
+            console.log(error);
         }
-        console.log('desconectado', socket.id);
     }));
     // ! ////////
     socket.on('new-user', () => __awaiter(void 0, void 0, void 0, function* () {
         const members = yield User_1.default.find();
-        // members.forEach(m => console.log(m.status))
         io.emit('new-user', members);
     }));
     socket.on('join-room', (room) => __awaiter(void 0, void 0, void 0, function* () {
@@ -109,7 +106,6 @@ io.on('connection', (socket) => {
         socket.emit('room-messages', { room, messages: roomMessages });
     }));
     socket.on('message-room', (room, content, sender, time, date) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log(`Nuevo mensaje: ${content}`);
         const newMessage = yield Message_1.default.create({
             content,
             from: sender,
@@ -124,7 +120,6 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('notifications', room);
     }));
     app.post('/logout', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log(req.body.name, req.body.email);
         try {
             const { _id, newMessages } = req.body;
             const user = yield User_1.default.findById(_id);
@@ -136,7 +131,6 @@ io.on('connection', (socket) => {
             res.status(200).send();
         }
         catch (error) {
-            console.log('Mire, un error' + error);
             res.status(400).send();
         }
     }));

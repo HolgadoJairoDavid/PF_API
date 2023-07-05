@@ -35,7 +35,7 @@ const captureOrderHandler = (req, res) => __awaiter(void 0, void 0, void 0, func
         const paymentInfo = Object.assign({ name,
             email }, amount);
         const newDonation = yield Donation_1.default.create(paymentInfo);
-        res.redirect("http://localhost:5173/donation");
+        res.redirect("https://henrymoon.vercel.app/donation");
     }
     catch (err) {
         return res.status(500).json({ error: err.message });
@@ -43,7 +43,7 @@ const captureOrderHandler = (req, res) => __awaiter(void 0, void 0, void 0, func
 });
 exports.captureOrderHandler = captureOrderHandler;
 const cancelOrderHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.redirect("http://localhost:5173/donation");
+    return res.redirect("https://henrymoon.vercel.app/donation");
 });
 exports.cancelOrderHandler = cancelOrderHandler;
 const getAllDonationsHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
